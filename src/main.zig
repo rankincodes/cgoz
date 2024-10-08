@@ -20,17 +20,15 @@ pub fn main() !void {
     var game = try Game.init(allocator, size.rows, size.cols);
     defer game.deinit();
 
-    // Initialize with a simple glider
-    game.setCell(1, 2, true);
-    game.setCell(2, 3, true);
-    game.setCell(3, 1, true);
-    game.setCell(3, 2, true);
+    // Initialize with a simple blinker
     game.setCell(3, 3, true);
+    game.setCell(3, 4, true);
+    game.setCell(3, 5, true);
 
     while (true) {
         try term.clearScreen();
         try term.moveCursor(1, 1);
-        try term.stdout.print("Welcome to the game of life! ({}rows x {}cols : {}px x {}px)\n", .{ size.rows, size.cols, size.x_px, size.y_px });
+        // try term.stdout.print("Welcome to the game of life! ({}rows x {}cols : {}px x {}px)\n", .{ size.rows, size.cols, size.x_px, size.y_px });
 
         for (0..game.rows) |row| {
             for (0..game.cols) |col| {
@@ -38,18 +36,19 @@ pub fn main() !void {
             }
         }
 
-        const input = try term.readChar();
+        // const input = try term.readChar();
 
-        switch (input) {
-            'q' => break,
-            'c' => {
-                const color = std.crypto.random.intRangeAtMost(u8, 0, 255);
-                try term.setColor(color, 0);
-            },
-            else => {},
-        }
+        // switch (input) {
+        //     'q' => break,
+        //     'c' => {
+        //         const color = std.crypto.random.intRangeAtMost(u8, 0, 255);
+        //         try term.setColor(color, 0);
+        //     },
+        //     else => {},
+        // }
 
         try game.evolve();
+        std.time.sleep(std.time.ns_per_ms * 500);
     }
 
     try term.resetColor();
